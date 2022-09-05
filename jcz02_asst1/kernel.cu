@@ -21,10 +21,10 @@ void vecMax_gpu(double* a, double* b, double* c, unsigned int M) {
     // Allocate GPU memory
     startTime(&timer);
     // TODO
-    float *x_d, *y_d, *z_d;
-    cudaMalloc((void**) &x_d, M*sizeof(float));
-    cudaMalloc((void**) &y_d, M*sizeof(float));
-    cudaMalloc((void**) &z_d, M*sizeof(float));
+    float *a_d, *b_d, *c_d;
+    cudaMalloc((void**) &a_d, M*sizeof(float));
+    cudaMalloc((void**) &b_d, M*sizeof(float));
+    cudaMalloc((void**) &c_d, M*sizeof(float));
 
     cudaDeviceSynchronize();
     stopTime(&timer);
@@ -34,8 +34,8 @@ void vecMax_gpu(double* a, double* b, double* c, unsigned int M) {
     startTime(&timer);
 
     // TODO
-    cudaMemcpy(x_d, x, M*sizeof(float), cudaMemcpyHostToDevice);
-    cudaMemcpy(y_d, y, M*sizeof(float), cudaMemcpyHostToDevice);
+    cudaMemcpy(a_d, a, M*sizeof(float), cudaMemcpyHostToDevice);
+    cudaMemcpy(b_d, b, M*sizeof(float), cudaMemcpyHostToDevice);
 
 
     cudaDeviceSynchronize();
@@ -46,8 +46,8 @@ void vecMax_gpu(double* a, double* b, double* c, unsigned int M) {
     startTime(&timer);
     // TODO
     const unsigned int numThreadsPerBlock = 512;
-    const unsigned int numBlocks = N/numThreadsPerBlock;
-    vecMax_gpu <<< numBlocks, numThreadsPerBlock >>> (x_d, y_d, z_d, N);
+    const unsigned int numBlocks = M/numThreadsPerBlock;
+    vecMax_gpu <<< numBlocks, numThreadsPerBlock >>> (a_d, b_d, c_d, M);
 
     cudaDeviceSynchronize();
     stopTime(&timer);
@@ -57,7 +57,7 @@ void vecMax_gpu(double* a, double* b, double* c, unsigned int M) {
     startTime(&timer);
 
     // TODO
-    cudaMemcpy(z, z_d, M*sizeof(float), cudaMemcpyDeviceToHost);
+    cudaMemcpy(c, c_d, M*sizeof(float), cudaMemcpyDeviceToHost);
 
     cudaDeviceSynchronize();
     stopTime(&timer);
@@ -67,9 +67,9 @@ void vecMax_gpu(double* a, double* b, double* c, unsigned int M) {
     startTime(&timer);
 
     // TODO
-    cudaFree((void**) &x_d);
-    cudaFree((void**) &y_d);
-    cudaFree((void**) &z_d);
+    cudaFree((void**) &a_d);
+    cudaFree((void**) &b_d);
+    cudaFree((void**) &c_d);
 
     cudaDeviceSynchronize();
     stopTime(&timer);
