@@ -4,8 +4,7 @@ OBJ     = main.o kernel.o
 EXE     = vecmax
 
 
-default:
-	$(EXE)
+default: $(EXE)
 
 %.o: %.cu
 	$(NVCC) -c -o $@ $<
