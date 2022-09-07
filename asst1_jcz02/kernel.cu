@@ -67,9 +67,9 @@ void vecMax_gpu(double* a, double* b, double* c, unsigned int M) {
     startTime(&timer);
 
     // TODO
-    cudaFree((void**) &a_d);
-    cudaFree((void**) &b_d);
-    cudaFree((void**) &c_d);
+    cudaFree(a_d);
+    cudaFree(b_d);
+    cudaFree(c_d);
 
     cudaDeviceSynchronize();
     stopTime(&timer);
