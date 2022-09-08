@@ -3,15 +3,13 @@
 #include "timer.h"
 
 void mm_cpu(float* A, float* B, float* C, unsigned int M, unsigned int N, unsigned int K) {
-    for (unsigned int row = 0; row < M; ++row) {
-        for (unsigned int col = 0; col < N; ++col) {
-            float sum = 0.0f;
-            for(unsigned int i = 0; i < K; ++i) {
-                sum += A[row*K + i]*B[i*N + col];
-            }
-            C[row*N + col] = sum;
-        }
+    unsigned int row = blockIdx.y*blockDim.y + threadIdx.y;
+    unsigned int col = blockIdx.x*blockDim.x + threadIdx.x;
+    float sum = 0.0f;
+    for(unsigned int i = 0; i < K; ++i) {
+        sum += A[row*K + i]*B[i*N + col];
     }
+    C[row*N + col] = sum;
 }
 
 int main(int argc, char**argv) {
