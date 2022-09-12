@@ -10,7 +10,7 @@ __global__ void mm_kernel(float* A, float* B, float* C, unsigned int M, unsigned
 
     if( col<N  && row<M) {
         for(int i = 0; i < K; i++ ) {
-            sum += A[row*M+ i] * B[i*N+col];
+            sum += A[row*N+ i] * B[i*M+col];
         }
         C[row * M + col] = sum;
     }
