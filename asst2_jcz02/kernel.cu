@@ -7,15 +7,13 @@ __global__ void mm_kernel(float* A, float* B, float* C, unsigned int M, unsigned
     unsigned int row = blockIdx.y*blockDim.y + threadIdx.y;
     unsigned int col = blockIdx.x*blockDim.x + threadIdx.x;
     float sum = 0.0f;
-    for (unsigned int row = 0; row < M; ++row) {
-        for (unsigned int col = 0; col < N; ++col) {
-            float sum = 0.0f;
-            for(unsigned int i = 0; i < K; ++i) {
-                sum += A[row*K + i]*B[i*N + col];
-            }
-            C[row*N + col] = sum;
+    if( col < k && row < m) {
+        for(int i = 0; i < n; i++) {
+            sum += a[row*n+i] * b[i*k+col];
         }
+        c[row * k + col] = sum;
     }
+
 }
 
 void mm_gpu(float* A, float* B, float* C, unsigned int M, unsigned int N, unsigned int K) {
