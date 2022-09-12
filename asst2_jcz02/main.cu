@@ -35,6 +35,7 @@ int main(int argc, char**argv) {
             B[row*N + col] = 1.0*rand()/RAND_MAX;
         }
     }
+    
 
     // Compute on CPU
     startTime(&timer);
