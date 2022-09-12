@@ -9,9 +9,9 @@ __global__ void mm_kernel(float* A, float* B, float* C, unsigned int M, unsigned
     float sum = 0.0f;
     if( col < k && row < m) {
         for(int i = 0; i < n; i++) {
-            sum += a[row*n+i] * b[i*k+col];
+            sum += A[row*N+i] *B[i*K+col];
         }
-        c[row * k + col] = sum;
+        C[row * K + col] = sum;
     }
 
 }
