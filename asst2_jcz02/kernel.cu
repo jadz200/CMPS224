@@ -10,9 +10,9 @@ __global__ void mm_kernel(float* A, float* B, float* C, unsigned int M, unsigned
 
     if( col<N  && row<M) {
         for(int i = 0; i < K; i++ ) {
-            sum += A[row*N+ i] * B[i*M+col];
+            sum += A[row*K+ i] * B[i*N+col];
         }
-        C[row * M + col] = sum;
+        C[row * N + col] = sum;
     }
 
 }
@@ -50,7 +50,7 @@ void mm_gpu(float* A, float* B, float* C, unsigned int M, unsigned int N, unsign
 
     // TODO
     dim3 numThreadsPerBlock(32, 32);
-    dim3 numBlocks((M + numThreadsPerBlock.x - 1)/numThreadsPerBlock.x, (M + numThreadsPerBlock.y - 1)/numThreadsPerBlock.y);
+    dim3 numBlocks((M + numThreadsPerBlock.x - 1)/numThreadsPerBlock.x, (N + numThreadsPerBlock.y - 1)/numThreadsPerBlock.y);
     mm_kernel <<< numBlocks, numThreadsPerBlock >>> (A_d, B_d, C_d, M, N, K);
 
 
