@@ -7,8 +7,8 @@ __global__ void mm_kernel(float* A, float* B, float* C, unsigned int M, unsigned
     unsigned int row = blockIdx.y*blockDim.y + threadIdx.y;
     unsigned int col = blockIdx.x*blockDim.x + threadIdx.x;
     float sum = 0.0f;
-    if( col < k && row < m) {
-        for(int i = 0; i < n; i++) {
+    if( col < K && row < M) {
+        for(int i = 0; i < N; i++) {
             sum += A[row*N+i] *B[i*K+col];
         }
         C[row * K + col] = sum;
