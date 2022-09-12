@@ -12,7 +12,7 @@ __global__ void mm_kernel(float* A, float* B, float* C, unsigned int M, unsigned
         for(int i = 0; i < K; i++ ) {
             sum += A[row*M+ i] * B[i*N+col];
         }
-        C[row * N + col] = sum;
+        C[row * K + col] = sum;
     }
 
 }
