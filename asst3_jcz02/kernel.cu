@@ -57,7 +57,9 @@ void mm_gpu(float* A, float* B, float* C, unsigned int M, unsigned int N, unsign
     startTime(&timer);
 
     // TODO
-   
+    cudaMemcpy(A_d, A, M*K*sizeof(float),cudaMemcpyHostToDevice);  
+    cudaMemcpy(B_d, B, K*N*sizeof(float),cudaMemcpyHostToDevice);  
+
 
 
 
@@ -84,7 +86,9 @@ void mm_gpu(float* A, float* B, float* C, unsigned int M, unsigned int N, unsign
     // Copy data from GPU
     startTime(&timer);
 
-    // TODO
+    cudaMemcpy(C, C_d, M*N*sizeof(float),cudaMemcpyHostToDevice);   
+
+
 
 
 
@@ -100,9 +104,9 @@ void mm_gpu(float* A, float* B, float* C, unsigned int M, unsigned int N, unsign
 
     // TODO
 
-
-
-
+    cudaFree(A_d);
+    cudaFree(B_d);
+    cudaFree(C_d);
 
 
     cudaDeviceSynchronize();
