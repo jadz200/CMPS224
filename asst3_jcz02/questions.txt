@@ -5,16 +5,14 @@
 
     (a) The kernel implemented in the previous assignment (without shared memory
         tiling)
+	2 FP : 2 operations(1 for addition and 1 for multiplication)
+	8B: loading 2 floats each one of 4 Bytes
+	2 FP / 8B= 0.25 FP/B
 
-
-
-
-
-    (b) The kernel implemented in this assignment (with shared memory tiling)
-
-
-
-
+    (b) The kernel implemented in this assignment (with shared memory tiling)	
+	8B: loading 2 floats each one of 4 Bytes
+	64FP : 2 operations(1 for addition and 1 for multiplication)*32(TILE_DIM)
+	64 FP/8 B =8FP/B
 
 (2) Assume that a block/tile size of 32x32 is used, and that the program runs
     on a NVIDIA Tesla V100 GPU (the model on the HPC cluster) which has the
@@ -30,20 +28,13 @@
     in this assignment. Show your work.
 
     (a) Is occupancy limited by the max blocks/SM?
-
-
-
-
+	we are using 32*32 threads in each block which is 1024threads/Block
+	the max threads per SM is 2048 so we can only have 2 blocks each one of 1024 threads
+	So the occupancy is not limited by the max blocks/SM
 
     (b) Is occupancy limited by the max shared-memory/SM?
-
-
-
+	Each shared memory is using 8192 bytes. We are using 2 shared memories so we are using a total of 16384B/SM which is way less than the  max occupancy whch is 96000
 
 
     (c) Is occupancy limited by the max registers/SM?
-
-
-
-
-
+	We are using 26 registers which is way smaller than the  max register 64000 so its not limiting max occupancy
