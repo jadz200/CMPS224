@@ -4,10 +4,10 @@
 #define IN_TILE_DIM 32
 #define OUT_TILE_DIM ((IN_TILE_DIM) - 2*(FILTER_RADIUS))
 
-_constant_ float filter_c[FILTER_DIM][FILTER_DIM];
+__constant__ float filter_c[FILTER_DIM][FILTER_DIM];
 
-_global_ void convolution_tiled_kernel(float* input, float* output, unsigned int width, unsigned int height) {
-	_shared_ float in_s[IN_TILE_DIM][IN_TILE_DIM];
+__global__ void convolution_tiled_kernel(float* input, float* output, unsigned int width, unsigned int height) {
+	__shared__ float in_s[IN_TILE_DIM][IN_TILE_DIM];
     int row = threadIdx.y + blockIdx.y * OUT_TILE_DIM -FILTER_RADIUS;
     int col = threadIdx.x + blockIdx.x * OUT_TILE_DIM- FILTER_RADIUS;
 	if((row >=0) && (row< height ) && (col>=0) && (col < width ) ) {
