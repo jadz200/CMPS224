@@ -1,7 +1,7 @@
 
 #include "common.h"
 #include "timer.h"
-#define COARSE_FACTOR 4
+#define COARSE_FACTOR 32
 __global__ void histogram_private_kernel(unsigned char* image, unsigned int* bins, unsigned int width, unsigned int height) {
     __shared__  int  b_s[NUM_BINS];
     unsigned int i = blockIdx.x*blockDim.x + threadIdx.x;
@@ -31,7 +31,7 @@ void histogram_gpu_private(unsigned char* image_d, unsigned int* bins_d, unsigne
 __global__ void histogram_private_coarse_kernel(unsigned char* image, unsigned int* bins, unsigned int width, unsigned int height) {
 
     __shared__ unsigned int bins_s [NUM_BINS];
-    unsigned int index = blockIdx.x * blockDim.x * COARSE_FACTOR + threadIdx.x;
+    unsigned int idx = blockIdx.x * blockDim.x * COARSE_FACTOR + threadIdx.x;
 
     if ( threadIdx.x < NUM_BINS ) 
         bins_s[ threadIdx.x ] = 0;
@@ -39,8 +39,8 @@ __global__ void histogram_private_coarse_kernel(unsigned char* image, unsigned i
     __syncthreads();
 
     for(int i = 0; i < COARSE_FACTOR; ++i) 
-        if (i * blockDim.x + index < width * height)
-            atomicAdd(&bins_s[image[i * blockDim.x + index ]], 1);
+        if (i * blockDim.x + idx < width * height)
+            atomicAdd(&bins_s[image[i * blockDim.x + idx ]], 1);
 
     __syncthreads();
 
