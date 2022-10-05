@@ -7,17 +7,22 @@ performed on global memory for each of the following kernels?
 
 (1) The unoptimized kernel with no privatization in shared memory or thread
     coarsening.
-
+    Each thread is doing one atomic operation.
+    Each thread is responsible of one pixel
+    4096*4096=16777216
     
 
 (2) The kernel with privatization in shared memory but without thread
     coarsening.
-
-    
+    Each thread is doing at least 1 atomic operation.
+    We are doing 1 atomic operation for each BIN in the end since we have NUM_BIN tiles.
+    num Blocks * bins = (width * height / numthreadsPerBlock) * bins = 4194304
+    4096*4096+256=16777472
 
 (3) The kernel with both privatization in shared memory and thread coarsening
     with a coarsening factor of 64.
-
-    
-
+    Each thread is doing at least 1 atomic operation.
+    We are doing 1 atomic operation for each BIN in the end since we have NUM_BIN tiles.
+    Since we are doing thread coarsening by 64, 1 thread is now doing the work of 64 threads.
+    4096*4096/64+256=262400
 
