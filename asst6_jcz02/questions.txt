@@ -3,10 +3,12 @@ Consider the reduction operation you are asked to implement in this assignment.
 Assume a thread block has 1024 threads and reduces 2048 input elements.
 
 (1) How many steps does a single thread block need to reduce its elements?
+=log(2*BlockDim.x)
+=log(2*1024)
+=log(2048)
+=11
 
-    
 
 (2) How many of these steps exhibit control divergence?
-
-    
-
+=log(32) #32 number of warps in a block
+=5
