@@ -4,26 +4,32 @@
 
 #define BLOCK_DIM 1024
 
-_global_ void scan_kernel(float* input, float* output, float* partialSums, unsigned int N) {
+__global__ void scan_kernel(float* input, float* output, float* partialSums, unsigned int N) {
 
-    unsigned int segment = 2 * blockIdx.x * blockDim.x;
+    unsigned int segment = 2*blockIdx.x*blockDim.x;
 
-    _shared_ float buffer_s[2 * BLOCK_DIM];
-    if (segment + threadIdx.x < N) 
-        buffer_s[threadIdx.x] = input[segment + threadIdx.x];
-    else
-        buffer_s[threadIdx.x] = 0.0f;
-    if (segment + BLOCK_DIM + threadIdx.x < N) 
-        buffer_s[blockDim.x + threadIdx.x] = input[segment + BLOCK_DIM + threadIdx.x];
-    else
+    __shared__ float buffer_s[2*BLOCK_DIM];
+    if (segment+threadIdx.x<N){ 
+        buffer_s[threadIdx.x]=input[segment+threadIdx.x];
+    }else{
+        buffer_s[threadIdx.x]=0.0f;
+    }
+
+    if (segment + BLOCK_DIM + threadIdx.x<N){ 
+        buffer_s[blockDim.x + threadIdx.x] = input[segment +BLOCK_DIM +threadIdx.x];
+    }else{
         buffer_s[blockDim.x + threadIdx.x] = 0.0f;
+    }
 
     __syncthreads();
 
     for(unsigned int stride = 1; stride <= BLOCK_DIM; stride *= 2) {
+
         unsigned int i = (threadIdx.x + 1) * stride * 2 - 1;
-        if (i < 2 * BLOCK_DIM) 
+        if (i < 2 * BLOCK_DIM){
             buffer_s[i] += buffer_s[i - stride];
+	}
+
         __syncthreads();
     }
 
@@ -46,13 +52,15 @@ _global_ void scan_kernel(float* input, float* output, float* partialSums, unsig
     output[segment + threadIdx.x + BLOCK_DIM] = buffer_s[threadIdx.x + BLOCK_DIM];
 }
 
-_global_ void add_kernel(float* output, float* partialSums, unsigned int N) {
+__global__ void add_kernel(float* output, float* partialSums, unsigned int N) {
 
     unsigned int segment =  2 * blockIdx.x * blockDim.x;
-    if (segment + threadIdx.x < N) 
+    if (segment + threadIdx.x < N){
         output[segment + threadIdx.x] += partialSums[blockIdx.x];
-    if (segment + threadIdx.x + BLOCK_DIM < N) 
+    }
+    if (segment + threadIdx.x + BLOCK_DIM < N){ 
         output[segment + threadIdx.x + BLOCK_DIM] += partialSums[blockIdx.x];
+    }
 }
 
 
